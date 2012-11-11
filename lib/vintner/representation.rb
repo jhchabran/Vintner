@@ -1,22 +1,26 @@
+require 'active_support/concern'
+require 'active_support/core_ext'
 require 'vintner/dsl_methods'
 require 'vintner/builder'
 require 'vintner/importer'
 
 module Vintner
   class Representation
-    def initialize &block
-      @builder = Builder.new &block
-      @importer = Importer.new &block
+    MissingBlockError = Class.new(Exception)
+
+    def initialize representer, &block
+      raise MissingBlockError unless block_given?
+
+      @representer = representer
+      @tree = {}
     end
 
-    def export representer, model
-      @builder.export representer, model
-    end
-
-    def import representer, model, hash
-      @importer.import representer, model, hash
-
-      model
+    def method_missing name, *args, &block
+      if block_given?
+        @tree[name] = block
+      else
+        @tree[name] = args.first
+      end
     end
   end
 end
