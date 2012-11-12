@@ -21,7 +21,7 @@ module Vintner
     end
 
     it "should have a dynamic title nested in meta" do
-      @representation[:meta][:title].should ==(:dynamic)
+      @representation[:meta][:title].should ==(Representation::PlaceHolder.instance)
     end
   end
 end
