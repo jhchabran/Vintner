@@ -1,9 +1,3 @@
-require 'active_support/concern'
-require 'active_support/core_ext'
-require 'vintner/dsl_methods'
-require 'vintner/builder'
-require 'vintner/importer'
-
 module Vintner
   class Representation < Hash
     def initialize representer
