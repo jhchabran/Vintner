@@ -5,22 +5,23 @@ require 'vintner/builder'
 require 'vintner/importer'
 
 module Vintner
-  class Representation
-    MissingBlockError = Class.new(Exception)
-
-    def initialize representer, &block
-      raise MissingBlockError unless block_given?
-
+  class Representation < Hash
+    def initialize representer
       @representer = representer
-      @tree = {}
     end
 
-    def method_missing name, *args, &block
+    def method_missing method_id, *args, &block
       if block_given?
-        @tree[name] = block
+        self[method_id] = yield Representation.new(@representer)
       else
-        @tree[name] = args.first
+        if method_id[-1] == '='
+          self[method_id[0..-2].to_sym] = args.first
+        else
+          self[method_id] = :dynamic
+        end
       end
+
+      self
     end
   end
 end
