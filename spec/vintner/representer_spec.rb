@@ -64,6 +64,14 @@ module Vintner
       it "should not raise if the same value is providen for a static value" do
         expect {@dummy.from_hash :version => 4}.to_not raise_error
       end
+
+      it "should raise if a different value is providen for a static value" do
+        expect {@dummy.from_hash :version => 5}.to raise_error(Importer::StaticValueError)
+      end
+
+      it "should raise if a value is providen for a missing setter" do
+        expect {@dummy.from_hash :meta => {:big_title => "BAR"}}.to raise_error(Importer::MissingSetterError)
+      end
     end
   end
 end

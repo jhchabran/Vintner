@@ -1,6 +1,7 @@
 module Vintner
   module Importer
-    StaticValueError = Class.new(Exception)
+    StaticValueError   = Class.new(Exception)
+    MissingSetterError = Class.new(Exception)
 
     def from_hash hash
       import representation, hash
@@ -13,7 +14,11 @@ module Vintner
         if value.is_a? Hash
           import(representation[key], value)
         elsif representation[key] == Representation::PlaceHolder.instance
-          send "#{key}=", value
+          if respond_to? "#{key}="
+            send "#{key}=", value
+          else
+            raise MissingSetterError
+          end
         else
           unless value == representation[key]
             raise StaticValueError
