@@ -45,5 +45,25 @@ module Vintner
       end
     end
 
+    describe "Importing :" do
+      before :each do
+        @hash = {
+          :meta => {
+            :main_title => 'bar'
+          }
+        }
+        @model = BasicModel.new("foo")
+        @dummy = Dummy.new(@model)
+      end
+
+      it "should import a main title" do
+        @dummy.from_hash @hash
+        @model.title.should ==("bar")
+      end
+
+      it "should not raise if the same value is providen for a static value" do
+        expect {@dummy.from_hash :version => 4}.to_not raise_error
+      end
+    end
   end
 end

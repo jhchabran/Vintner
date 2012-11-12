@@ -1,27 +1,25 @@
 module Vintner
-  class Importer
-    include DSLMethods
+  module Importer
+    StaticValueError = Class.new(Exception)
 
-    def import representer, model, hash
-      @store = {}
-      @representer = representer
-      @model = model
+    def from_hash hash
+      import representation, hash
 
-      # Registering keys and properties
-      @block.call(self, @model) if @block
+      self
+    end
 
-      # Then we play the score accordingly
-      @store.each do |key, object|
-        if object.is_a? Importer
-          object.import representer, model, hash[key.to_s]
+    def import representation, hash
+      hash.each do |key, value|
+        if value.is_a? Hash
+          import(representation[key], value)
+        elsif representation[key] == Representation::PlaceHolder.instance
+          send "#{key}=", value
         else
-          if hash && hash.has_key?(key) && object.respond_to?(:import)
-            object.import model, hash[key]
+          unless value == representation[key]
+            raise StaticValueError
           end
         end
       end
-
-      hash
     end
   end
 end
