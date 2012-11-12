@@ -1,5 +1,11 @@
+require 'singleton'
+
 module Vintner
   class Representation < Hash
+    class PlaceHolder
+      include ::Singleton
+    end
+
     def initialize representer
       @representer = representer
     end
@@ -11,7 +17,7 @@ module Vintner
         if method_id[-1] == '='
           self[method_id[0..-2].to_sym] = args.first
         else
-          self[method_id] = :dynamic
+          self[method_id] = PlaceHolder.instance
         end
       end
 
