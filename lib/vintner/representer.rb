@@ -1,5 +1,3 @@
-require 'active_support/concern'
-require 'active_support/core_ext'
 require 'vintner/exporter'
 require 'vintner/importer'
 require 'vintner/representation'

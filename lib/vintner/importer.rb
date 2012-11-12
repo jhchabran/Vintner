@@ -1,3 +1,5 @@
+require 'vintner/representation'
+
 module Vintner
   module Importer
     StaticValueError   = Class.new(Exception)
